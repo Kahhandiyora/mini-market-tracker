@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Mini Market Tracker — Comparison + Volume</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{--bg:#f6fafc;--text:#0f1720;--card:#fff;--muted:#6b7280;--accent:#0a84ff;--pos:#0a7a2b;--neg:#dc2626}
+    [data-theme="dark"]{--bg:#090b0e;--text:#e6eef6;--card:#0f1417;--muted:#9aa6b2;--accent:#2b9cff;--pos:#57d77a;--neg:#ff6b6b}
+    body{background:var(--bg);color:var(--text);font-family:Inter,system-ui;padding:28px;display:flex;justify-content:center}
+    .wrap{max-width:1100px;width:100%}
+    header{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    h1{margin:0;font-size:20px}
+    .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    input,select,button{padding:8px 10px;border-radius:8px;border:1px solid #e6eef6;background:var(--card);color:var(--text)}
+    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 8px 22px rgba(2,6,23,0.06);margin-top:16px}
+    #chart{height:420px;width:100%}
+    .summary{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+    .summary .item{flex:1;min-width:140px;padding:10px;border-radius:10px;background:linear-gradient(180deg, rgba(2,6,23,0.02), transparent);text-align:center}
+    .small{font-size:13px;color:var(--muted)}
+    .controls .small{margin-left:8px}
+    .compare-row{display:flex;gap:8px;align-items:center}
+    code{background:rgba(0,0,0,0.04);padding:3px 6px;border-radius:6px}
+  </style>
+</head>
+<body data-theme="light">
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Mini Market Tracker</h1>
+        <div class="small">Ticker: <strong id="ticker">-</strong> · Price: $<span id="price">-</span> · <span id="pct">-</span></div>
+      </div>
+
+      <div class="controls">
+        <select id="preset-select" aria-label="preset">
+          <option>AAPL</option><option>MSFT</option><option>GOOGL</option><option>AMZN</option><option>META</option><option>NFLX</option><option>TSLA</option>
+        </select>
+
+        <div class="compare-row">
+          <input id="ticker-input" type="text" placeholder="Ticker" style="width:110px;text-transform:uppercase" />
+          <input id="ticker2-input" type="text" placeholder="Compare (optional)" style="width:140px;text-transform:uppercase" />
+        </div>
+
+        <input id="days-input" type="number" min="2" max="120" value="30" style="width:86px" />
+        <button id="fetch-btn" class="primary">Load</button>
+        <button id="generate-btn">Generate</button>
+        <button id="auto-btn">Auto: Off</button>
+
+        <label class="small">Theme
+          <select id="theme-select"><option value="light">Light</option><option value="dark">Dark</option></select>
+        </label>
+      </div>
+    </header>
+
+    <div class="card">
+      <canvas id="chart"></canvas>
+      <div class="summary" id="summary">
+        <div class="item"><div class="small">7-day avg</div><div class="value" id="avg">-</div></div>
+        <div class="item"><div class="small">High</div><div class="value" id="high">-</div></div>
+        <div class="item"><div class="small">Low</div><div class="value" id="low">-</div></div>
+        <div class="item"><div class="small">Volume (last)</div><div class="value" id="vol">-</div></div>
+      </div>
+      <div class="small" style="margin-top:10px">Tip: click Generate to create <code>TICKER.json</code> on the server (or use the Node API).</div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
